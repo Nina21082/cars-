@@ -1,22 +1,33 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useState, useEffect} from 'react'
-import {Link} from "react-router-dom";
+import {useDispatch } from "react-redux";
+import {useState } from 'react'
+import {Link, useNavigate} from "react-router-dom";
+import {loginAction} from "./store/actions/authAction";
 
 export const  Login = () => {
+    const dispatch = useDispatch()
+    let navigate = useNavigate()
     const [state, setState] = useState({
         email: '',
         password: ''
     })
 
+
     const handleSubmit = (e) => {
         e.preventDefault()
+        dispatch(loginAction(
+            {email: state.email,
+                password: state.password
+            }))
+        if (localStorage.getItem('token')) {
+            navigate("/profile", { replace: true })
+        }
     };
-
     const handleChange = (name, value) => {
         setState({...state, [name]: value})
 
     }
+
 
     return(
         <div className='flex justify-center p-40'>

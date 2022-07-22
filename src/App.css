@@ -1,6 +1,4 @@
-.App {
-  text-align: center;
-}
+
 
 .App-logo {
   height: 40vmin;
@@ -35,4 +33,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+.fa{
+  font-size: 32px;
+  padding: 4px;
+  margin-right: 32px;
 }
