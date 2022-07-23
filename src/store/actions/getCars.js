@@ -12,9 +12,10 @@ export const getCars = () => async (dispatch) => {
         })
         const carsCollectionRef = collection(db, "cars");
         const data = await getDocs(carsCollectionRef);
+        // data.docs[0]._document.data.value.mapValue.fields
         dispatch({
             type: GET_CARS,
-            payload: data.docs[0]._document.data.value.mapValue.fields
+            payload: data.docs
         })
     }catch (error) {
         dispatch({

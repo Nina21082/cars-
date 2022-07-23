@@ -3,7 +3,7 @@ import {GET_CARS,
     CARS_LOADING} from '../type'
 
 const initialState = {
-    carsData: [{}],
+    carsData: [],
     loading: null,
     error: null
 }
