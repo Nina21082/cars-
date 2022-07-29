@@ -2,19 +2,17 @@ import {
     REGISTER_SUCCESS,
     REGISTER_ERROR,
     REGISTER_LOADING,
-    LOGIN_ERROR,
-    LOGIN_LOADING,
-    LOGIN_SUCCESS,
     LOGOUT_ERROR,
     LOGOUT_LOADING,
     LOGOUT_SUCCESS,
-    SET_USER
+    SET_USER, LOGIN_SUCCESS, LOGIN_LOADING
 } from "../type";
 
 const initialState = {
     loading: null,
     currentUser: [],
     error: null,
+    token: null
 }
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -23,7 +21,13 @@ export const authReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                currentUser: action.payload
+                currentUser: {
+                    email: action.payload.user.email,
+                    name: action.payload.user.displayName,
+                    uid: action.payload.user.uid
+                },
+                token: action.payload.user.accessToken
+
             }
         case REGISTER_ERROR:
             return {
@@ -42,13 +46,12 @@ export const authReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                currentUser: action.payload
-            }
-        case LOGIN_ERROR:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload,
+                currentUser: {
+                    email: action.payload.user.email,
+                    name: action.payload.user.displayName,
+                    uid: action.payload.user.uid
+                },
+                token: action.payload.user.accessToken
             }
         case  LOGIN_LOADING:
             return {
@@ -56,12 +59,14 @@ export const authReducer = (state = initialState, action) => {
                 loading: true,
                 error: null
             }
+
         case LOGOUT_SUCCESS :
             return {
                 ...state,
                 loading: false,
                 error: null,
-                currentUser: null
+                currentUser: null,
+                token: null
             }
         case LOGOUT_ERROR:
             return {

@@ -15,3 +15,14 @@ export const SET_USER = 'SET_USER'
 export const GET_CARS = 'GET_CARS'
 export const CARS_ERROR = 'CARS_ERROR'
 export const CARS_LOADING= 'CARS_LOADING'
+
+export const GET_USER_CARS = 'GET_USER_CARS'
+export const CARS_USER_ERROR = 'CARS_USER_ERROR'
+export const CARS_USER_LOADING = 'CARS_USER_LOADING'
+
+export const GET_CARS_BRAND = 'GET_CATS_BRAND'
+export const GET_CARS_MODEL = 'GET_CARS_MODEL'
+
+
+export const DELETE_CAR = 'DELETE_CAR'
+export const DELETE_CAR_ERROR = 'DELETE_CAR_ERROR'

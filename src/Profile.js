@@ -1,44 +1,32 @@
 import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect} from "react";
-import {auth, db} from "./config/fbConfig";
-import {setUser} from "./store/actions/authAction";
 import {Link} from "react-router-dom";
-import {getCars} from "./store/actions/getCars";
-import { doc, deleteDoc } from "firebase/firestore";
-import {collection, getDocs} from "firebase/firestore";
+import {getUserCars, deleteCar} from "./store/actions/getCars";
+import {Loading} from "./Loading";
 
 
 export const Profile = () => {
-    const dispatch = useDispatch()
-    const carsData = useSelector((state) => state.getCarsReducer.carsData)
-    const user = useSelector((state) => state.authReducer.currentUser)
+    const dispatch = useDispatch();
+    const carsData = useSelector((state) => state.getCarsReducer.carsData);
+    const user = useSelector((state) => state.authReducer.currentUser);
+    const loading = useSelector((state) => state.authReducer.loading);
+
+    const handleDelete = async (e, id) => {
+        e.preventDefault();
+        dispatch(deleteCar(id));
+        console.log(carsData);
+    }
 
 
     useEffect(() => {
-        auth.onAuthStateChanged((authUser) => {
-            if (authUser) {
-                dispatch(setUser(user))
-            } else {
-                dispatch(setUser(null));
-            }
-        })
-    }, [dispatch])
-    useEffect(() => {
-        dispatch(getCars())
+        if (user) {
+            dispatch(getUserCars(user.uid))
+        }
+    }, [user])
 
-    }, [dispatch])
-
-    console.log(carsData)
-  const handleDelete = async (e) =>{
-        e.preventDefault()
-      await deleteDoc(doc(db, 'cars' ));
-      console.log(111);
-  }
-
-
-    // console.log(item._document.data.value.mapValue.fields.brand.stringValue)
     return (
-        <div class="container mx-auto px-4 sm:px-8">
+        <div className="container mx-auto px-4 sm:px-8 relative">
+            {loading ? <Loading/> : false}
             <div
                 className="py-8">
                 <div>
@@ -64,9 +52,13 @@ export const Profile = () => {
                                 </th>
                                 <th
                                     className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Description
+                                </th>
+                                <th
+                                    className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
 
                                 </th>
-                                <Link to='/addCars'>
+                                <Link to='/car/add'>
                                     <th
                                         className="px-4 py-2 border-b-2 border-gray-200 bg-gray-100">
                                         <button
@@ -77,40 +69,41 @@ export const Profile = () => {
                                 </Link>
                             </tr>
                             </thead>
-                            {carsData.map(item => {
+                            {carsData.map((item) => {
                                 return (
-
-                                    <tbody>
+                                    <tbody key={item.id}>
                                     <tr>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                             <div className="flex">
                                                 <div className="flex-shrink-0 w-10 h-10">
                                                     <img
                                                         className="w-full h-full rounded-full"
-                                                        src={item._document.data.value.mapValue.fields.image.stringValue}
+                                                        src={item.image}
                                                         alt="img"
                                                     />
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p className="text-gray-900 whitespace-no-wrap">{item._document.data.value.mapValue.fields.brand.stringValue}</p>
+                                            <p className="text-gray-900 whitespace-no-wrap">{item.brand}</p>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <p className="text-gray-900 whitespace-no-wrap">{item._document.data.value.mapValue.fields.model.stringValue}</p>
+                                            <p className="text-gray-900 whitespace-no-wrap">{item.model}</p>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                            <button
-                                                className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                                            <p className="text-gray-900 whitespace-no-wrap">{item.description}</p>
+                                        </td>
+                                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                            <Link to={`/car/${item.id}`}
+                                                  className="bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
                                                 Edit
-                                            </button>
+                                            </Link>
                                         </td>
                                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
                                             <button
-                                                onClick={handleDelete}
+                                                onClick={(e) => handleDelete(e, item.id)}
                                                 className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded">
                                                 Delete
-
                                             </button>
                                         </td>
                                     </tr>

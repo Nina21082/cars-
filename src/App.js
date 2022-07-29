@@ -6,6 +6,8 @@ import React from "react";
 import {Register} from "./Register";
 import {Profile} from "./Profile";
 import {AddCars} from "./AddCars";
+import {Home} from "./Home";
+import {CarPage} from "./CarPage";
 
 
 function App() {
@@ -15,10 +17,13 @@ function App() {
     <div className="App">
      <Header />
      <Routes>
+         <Route path='/' element={<Home/>}/>
          <Route path='login' element={<Login/>}/>
          <Route path='register' element={<Register/>}/>
          <Route path='profile' element={<Profile/>}/>
-         <Route path='addCars' element={<AddCars/>}/>
+         <Route path='car/:id' element={<AddCars/>}/>
+         <Route path='carsData/:id' element={<CarPage/>}/>
+
      </Routes>
     </div>
   );

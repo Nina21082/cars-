@@ -2,14 +2,13 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {registerAction} from "./store/actions/authAction";
 import {useNavigate} from 'react-router-dom';
+import {Error, ErrorRegister} from "./Error";
 
 export const Register = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const user = useSelector((state) => state.authReducer.currentUser)
     const error = useSelector((state) => state.authReducer.error)
-    console.log(error)
-    console.log(user)
+    const token = useSelector((state) => state.authReducer.token)
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
@@ -18,11 +17,11 @@ export const Register = () => {
         confirmPass: ''
     })
 
-
     useEffect(() => {
         if (localStorage.getItem('token')) {
             navigate('/profile')
         }
+        console.log(token)
     }, [localStorage.getItem('token')])
 
     const handleChange = (name, value) => {
@@ -40,11 +39,10 @@ export const Register = () => {
             name: formData.name,
             surname: formData.surname
         }))
-
     };
     return (
         <div>
-            {error ? <p className='text-red-700 truncate p-8 transition duration-700 ease-in-out'>User already registered</p> : null}
+            {error ? <ErrorRegister/> : null}
             <div className='flex justify-center p-20'>
 
                 <form
@@ -115,7 +113,8 @@ export const Register = () => {
                                 />
                             </div>
                             <div className="w-full px-3">
-                                <label className=" uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                <label className={formData.password !== formData.confirmPass ? "text-red-600 text-xs font-serif  uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                    : 'uppercase tracking-wide text-gray-700 text-xs font-bold mb-2'}
                                        htmlFor="grid-password">
                                     Confirm password
                                 </label>

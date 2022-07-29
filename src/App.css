@@ -3,6 +3,7 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  position: relative;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -31,11 +32,11 @@
     transform: rotate(0deg);
   }
   to {
+
     transform: rotate(360deg);
   }
 }
 .fa{
   font-size: 32px;
   padding: 4px;
-  margin-right: 32px;
 }

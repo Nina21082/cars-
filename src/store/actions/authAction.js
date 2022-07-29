@@ -6,10 +6,9 @@ import {
 import {createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    getAuth,
-    updateProfile
+    onAuthStateChanged
 } from 'firebase/auth'
-import {auth} from "../../config/fbConfig";
+import {auth, db} from "../../config/fbConfig";
 
 
 
@@ -19,7 +18,6 @@ export const registerAction = (data) => async (dispatch) =>{
             type: REGISTER_LOADING,
             payload: true
         })
-
         const user = await createUserWithEmailAndPassword(auth, data.email, data.password)
         const token = user.user.accessToken;
         localStorage.setItem('token', token);
@@ -28,7 +26,7 @@ export const registerAction = (data) => async (dispatch) =>{
             payload: user
         })
     }catch (error) {
-    dispatch({
+        dispatch({
         type: REGISTER_ERROR,
         payload: error.message
     })
@@ -61,7 +59,7 @@ export const logoutAction = () => async (dispatch) => {
             type: LOGOUT_LOADING,
             payload: true
         });
-        const resp = await signOut(auth)
+        await signOut(auth);
         dispatch({
             type: LOGOUT_SUCCESS,
         })
@@ -73,12 +71,14 @@ export const logoutAction = () => async (dispatch) => {
     }
 }
 export const setUser = () => async (dispatch)  => {
-    const user = await getAuth();
-    dispatch({
-        type: SET_USER,
-        payload: user
-    })
-
-}
+    await onAuthStateChanged(auth, (user) => {
+        if (user) {
+            dispatch({
+                type: SET_USER,
+                payload: user
+            });
+        }
+    });
+};
 
 
